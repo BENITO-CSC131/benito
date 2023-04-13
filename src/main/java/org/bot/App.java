@@ -14,11 +14,12 @@ public class App {
     static JSONArray assignments = new JSONArray();
 
     static JSONArray announcements = new JSONArray();
-    static JSONArray notifications = new JSONArray();
+    //static JSONArray notifications = new JSONArray();
 
     public static void main(String[] args) throws Exception {
         JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
         builder.addEventListener(new MyListener());
     }
+
 }
 
