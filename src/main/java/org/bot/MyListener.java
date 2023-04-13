@@ -62,6 +62,29 @@ public class MyListener extends ListenerAdapter {
                     channel.sendMessage(assignment.getString("name")).queue();
                 }
             }
+
+            case "!notifs" ->{
+                MessageChannel channel = event.getChannel();
+
+                if (App.announcements.isEmpty()) {
+                    channel.sendMessage("Getting announcements").queue();
+                    try {
+                        System.out.println("Connecting for announcements");
+                        App.announcements = CanvasGet.getAnnouncements();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                for (int i = 0; i < App.announcements.length(); i++) {
+                    JSONObject course = App.announcements.getJSONObject(i);
+
+                    if (course.getInt("id") > 100000) {
+                        channel.sendMessage(course.getString("name")).queue();
+                    }
+                }
+            }
+
         }
     }
 }

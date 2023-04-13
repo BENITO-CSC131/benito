@@ -30,7 +30,7 @@ public class CanvasGet {
     }
 
     public static JSONArray getHW() throws Exception {
-        String url = "https://csus.instructure.com/api/v1/courses/" + 102203 + "/assignments";
+        String url = "https://csus.instructure.com/api/v1/courses/" + 103397 + "/assignments";
         HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
@@ -43,6 +43,43 @@ public class CanvasGet {
             reader.close();
 
             return assignments;
+        } else {
+            return null;
+        }
+    }
+
+    public static JSONArray getAnnouncements() throws Exception {
+        String url = "https://csus.instructure.com/api/v1/announcements";
+        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = reader.readLine();
+            JSONArray courses = new JSONArray(response);
+            reader.close();
+
+            return courses;
+        } else {
+            return null;
+        }
+    }
+    public static JSONArray getNotifs() throws Exception {
+        String url = "https://csus.instructure.com/api/v1/accounts/"+103397 + "/account_notifications";
+        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
+
+        int responseCode = connection.getResponseCode();
+        if (responseCode == HttpURLConnection.HTTP_OK) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String response = reader.readLine();
+            JSONArray courses = new JSONArray(response);
+            reader.close();
+
+            return courses;
         } else {
             return null;
         }
