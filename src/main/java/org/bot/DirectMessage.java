@@ -7,12 +7,12 @@ public class DirectMessage
 {
     private User user = null;
 
-    public DirectMessage(User user)
+    public DirectMessage(User user)//OBJECT MUST BE CONSTRUCTED WITH THE JDA USER TYPE AS THE PARAMETER
     {
         this.user = user;
     }
 
-    public static boolean messageUser(User user,String message)
+    public static boolean messageUser(User user,String message)//this is used to send a message without the need for an object
     {
         try {
             user.openPrivateChannel()
@@ -26,7 +26,7 @@ public class DirectMessage
         }
     }
 
-    public boolean messageUser(String message)
+    public boolean messageUser(String message)//this is used to send the message with the object OBJECT MUST BE INSTANIATED FIRST OR IT WILL NOT WORK
     {
         try {
             this.user.openPrivateChannel()
