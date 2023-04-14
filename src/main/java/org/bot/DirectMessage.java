@@ -1,3 +1,19 @@
+/*
+DirectMessage Class
+
+1 Constructor 2 Methods
+
+1st Method: messageUser(User user,String message) 
+    
+    this can be easily called with DirectMessage.messageUser(  ,  );
+    
+
+User must come from net.dv8tion.jda.api.entities.User class (this jda class can be found here: https://ci.dv8tion.net/job/JDA/javadoc/net/dv8tion/jda/api/entities/User.html)
+
+2nd Method: messageUser(String message)
+    
+    requires a call from constructor like so ------> DirectMessage msg = new DirectMessage(User) comes from user class above
+*/
 package org.bot;
 
 import net.dv8tion.jda.api.entities.User;
@@ -7,7 +23,7 @@ public class DirectMessage
 {
     private User user = null;
 
-    public DirectMessage(User user)//OBJECT MUST BE CONSTRUCTED WITH THE JDA USER TYPE AS THE PARAMETER
+    public DirectMessage(User user)
     {
         this.user = user;
     }
@@ -26,7 +42,7 @@ public class DirectMessage
         }
     }
 
-    public boolean messageUser(String message)//this is used to send the message with the object OBJECT MUST BE INSTANIATED FIRST OR IT WILL NOT WORK
+    public boolean messageUser(String message)
     {
         try {
             this.user.openPrivateChannel()
