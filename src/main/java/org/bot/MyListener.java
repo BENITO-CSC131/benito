@@ -63,27 +63,47 @@ public class MyListener extends ListenerAdapter {
                 }
             }
 
-            case "!notifs" ->{
+            case "!notifications" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.announcements.isEmpty()) {
+                if (App.notifications.isEmpty()) {
                     channel.sendMessage("Getting announcements").queue();
                     try {
                         System.out.println("Connecting for announcements");
-                        App.announcements = CanvasGet.getAnnouncements();
+                        App.notifications = CanvasGet.getNotifications();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
 
-                for (int i = 0; i < App.announcements.length(); i++) {
-                    JSONObject course = App.announcements.getJSONObject(i);
+                for (int i = 0; i < App.notifications.length(); i++) {
+                    JSONObject course = App.notifications.getJSONObject(i);
+                    channel.sendMessage(course.getString("name")).queue();
 
-                    if (course.getInt("id") > 100000) {
-                        channel.sendMessage(course.getString("name")).queue();
-                    }
+                    //if (course.getInt("id") > 100000) {
+                      //  channel.sendMessage(course.getString("name")).queue();
+                    //}
                 }
             }
+
+            case "!announcements" -> {
+                MessageChannel channel = event.getChannel();
+
+                if (App.assignments.isEmpty()) {
+                    channel.sendMessage("Getting Assignments").queue();
+                    try {
+                        System.out.println("Connecting for hw");
+                        App.assignments = CanvasGet.getHW();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                for (int i = 0; i < App.assignments.length(); i++) {
+                    JSONObject assignment = App.assignments.getJSONObject(i);
+                    channel.sendMessage(assignment.getString("name")).queue();
+                }
+        }
 
         }
     }

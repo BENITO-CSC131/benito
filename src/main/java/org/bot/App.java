@@ -13,8 +13,8 @@ public class App {
     static JSONArray courses = new JSONArray();
     static JSONArray assignments = new JSONArray();
 
-    static JSONArray announcements = new JSONArray();
-    //static JSONArray notifications = new JSONArray();
+    //static JSONArray announcements = new JSONArray();
+    static JSONArray notifications = new JSONArray();
 
     public static void main(String[] args) throws Exception {
         System.out.println("hello");
