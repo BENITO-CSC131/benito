@@ -10,11 +10,12 @@ import java.net.URI;
 
 public class CanvasGet {
 
-    public static JSONArray getClasses() throws Exception {
+    //this is changed slightly so the method can be used in the database class
+    public static JSONArray getClasses(String CanvasKey) throws Exception {
         String url = "https://csus.instructure.com/api/v1/courses";
         HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         connection.setRequestMethod("GET");
-        connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
+        connection.setRequestProperty("Authorization", "Bearer " + CanvasKey);
 
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {

@@ -26,18 +26,20 @@ public class MyListener extends ListenerAdapter {
             case "!classes" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.courses.isEmpty()) {
+                if (App.allCourse_JSON.isEmpty()) {
                     channel.sendMessage("Getting classes").queue();
                     try {
                         System.out.println("Connecting for classes");
-                        App.courses = CanvasGet.getClasses();
+                        App.allCourse_JSON = CanvasGet.getClasses(API_keys.CanvasKey); //changed so this command can still work
+
+
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
 
-                for (int i = 0; i < App.courses.length(); i++) {
-                    JSONObject course = App.courses.getJSONObject(i);
+                for (int i = 0; i < App.allCourse_JSON.length(); i++) {
+                    JSONObject course = App.allCourse_JSON.getJSONObject(i);
 
                     if (course.getInt("id") > 100000) {
                         channel.sendMessage(course.getString("name")).queue();
