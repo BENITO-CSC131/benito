@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.json.JSONObject;
 
+
 public class MyListener extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
@@ -63,47 +64,25 @@ public class MyListener extends ListenerAdapter {
                 }
             }
 
-            case "!notifications" -> {
-                MessageChannel channel = event.getChannel();
-
-                if (App.notifications.isEmpty()) {
-                    channel.sendMessage("Getting announcements").queue();
-                    try {
-                        System.out.println("Connecting for announcements");
-                        App.notifications = CanvasGet.getNotifications();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-
-                for (int i = 0; i < App.notifications.length(); i++) {
-                    JSONObject course = App.notifications.getJSONObject(i);
-                    channel.sendMessage(course.getString("name")).queue();
-
-                    //if (course.getInt("id") > 100000) {
-                      //  channel.sendMessage(course.getString("name")).queue();
-                    //}
-                }
-            }
-
             case "!announcements" -> {
                 MessageChannel channel = event.getChannel();
 
-                if (App.assignments.isEmpty()) {
-                    channel.sendMessage("Getting Assignments").queue();
+                if (App.announcements.isEmpty()) {
+                    channel.sendMessage("Getting Announcements").queue();
                     try {
-                        System.out.println("Connecting for hw");
-                        App.assignments = CanvasGet.getHW();
+                        System.out.println("Connecting for Announcements");
+                        App.announcements = CanvasGet.getAnnouncements();
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }
 
-                for (int i = 0; i < App.assignments.length(); i++) {
-                    JSONObject assignment = App.assignments.getJSONObject(i);
-                    channel.sendMessage(assignment.getString("name")).queue();
+                for (int i = 0; i < App.announcements.length(); i++) {
+                    JSONObject announcement = App.announcements.getJSONObject(i);
+                    channel.sendMessage(announcement.getString("title")).queue();
                 }
-        }
+            }
+
 
         }
     }

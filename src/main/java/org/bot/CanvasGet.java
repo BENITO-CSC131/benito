@@ -48,7 +48,7 @@ public class CanvasGet {
     }
 
     public static JSONArray getAnnouncements() throws Exception {
-        String url = "https://csus.instructure.com/api/v1/announcements";
+        String url = "https://csus.instructure.com/api/v1/courses/"+ 102203 + "/discussion_topics?only_announcements=true";
         HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
@@ -56,40 +56,22 @@ public class CanvasGet {
         int responseCode = connection.getResponseCode();
         if (responseCode == HttpURLConnection.HTTP_OK) {
             BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = reader.readLine();
-            JSONArray courses = new JSONArray(response);
+            StringBuilder responseBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                responseBuilder.append(line);
+            }
             reader.close();
+            JSONArray announcements = new JSONArray(responseBuilder.toString());
 
-            return courses;
+            return announcements;
         } else {
             return null;
         }
     }
 
-    public static JSONArray getNotifications() throws Exception {
-        //switch USER_ID with the professor's ID
-        int USER_ID = 102203;
-        String url = "https://csus.instructure.com/api/v1/users/" + USER_ID + "/communication_channels";
 
-        //this link points to the /communication_channels endpoint for the current user, which includes notifications.
-        //String url = "https://csus.instructure.com/api/v1/users/self/communication_channels?include[]=notifications";
-        HttpURLConnection connection = (HttpURLConnection) URI.create(url).toURL().openConnection();
-        connection.setRequestMethod("GET");
-        connection.setRequestProperty("Authorization", "Bearer " + API_keys.CanvasKey);
-
-        int responseCode = connection.getResponseCode();
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            String response = reader.readLine();
-            JSONArray notifications = new JSONArray(response);
-            reader.close();
-
-            return notifications;
-        } else {
-            return null;
-        }
-    }
-
+    //this method is in progress
     public static JSONArray getAllNotifs() throws Exception {
         JSONArray allNotifs = new JSONArray();
         JSONArray courses = getClasses();
