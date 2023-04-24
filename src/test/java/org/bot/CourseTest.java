@@ -14,6 +14,7 @@ public class CourseTest {
     void setUp() {
         jsonCourse.put("id", 100);
         jsonCourse.put("name", "Course 1");
+        jsonCourse.put("description", "This is a course, but this description shouldn't show up in course list.");
         course = new Course(jsonCourse);
     }
 
