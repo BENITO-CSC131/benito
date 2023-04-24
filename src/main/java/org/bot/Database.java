@@ -10,22 +10,10 @@ import org.json.JSONArray;
  * ArrayLists are populated by various methods in and outside of this class.
  */
 public class Database {
-    private JSONArray allCourse_JSON = new JSONArray();
-    private JSONArray allAss_JSON = new JSONArray();
+    // private JSONArray allCourse_JSON = new JSONArray();
+    // private JSONArray allAss_JSON = new JSONArray();
     private ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> allAss_AL = new ArrayList<>();
-    private ArrayList<Assignment> upcoming = new ArrayList<>();
-    private ArrayList<Assignment> past = new ArrayList<>();
-    private ArrayList<Assignment> undated = new ArrayList<>();
-    private ArrayList<Assignment> overdue = new ArrayList<>();
-
-    // idea of fast getting of courses since technically the amount of classes can
-    // can change from student to student and so Integer would be courseID and will
-    // make faster performance of getting courses.
-    // private HashMap<Integer, Assignment> pastHASH;
-    // private HashMap<Integer, Assignment> upcomingHASH;
-    // private HashMap<Integer, Assignment> undatedHASH;
-    // private HashMap<Integer, Assignment> overdueHASH;
 
     // Getter for courses_AL; returns an ArrayList of Course objects
     public ArrayList<Course> getCourses_AL() {
