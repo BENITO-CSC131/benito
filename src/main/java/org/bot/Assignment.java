@@ -28,7 +28,7 @@ public class Assignment {
 
     // Constructor that takes a JSONObject
     public Assignment(JSONObject assignment) {
-        this.courseID = assignment.getInt("course_ID");
+        this.courseID = assignment.getInt("course_id");
         this.assID = assignment.getInt("id");
         this.assName = assignment.getString("name");
         this.assDate = assignment.getString("due_at");

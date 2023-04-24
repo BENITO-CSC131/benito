@@ -30,7 +30,7 @@ public class MyListener extends ListenerAdapter {
                     channel.sendMessage("Getting classes").queue();
                     try {
                         System.out.println("Connecting for classes");
-                        App.allCourse_JSON = CanvasGet.getClasses(API_keys.CanvasKey); //changed so this command can still work
+                        App.allCourse_JSON = CanvasGet.getCourses(); //changed so this command can still work
 
 
                     } catch (Exception e) {
