@@ -55,13 +55,13 @@ public class DatabaseTest {
         db = new Database();
         db.courseLOAD(jsonCourses);
 
-        assertEquals(2, db.getCoursesAL().size());
+        assertEquals(2, db.getCourses_AL().size());
 
         // Checking that the courses were loaded correctly
-        assertEquals(100, db.getCoursesAL().get(0).getCourseID(), "Testing ID getter");
-        assertEquals("Course 1", db.getCoursesAL().get(0).getCourseName(), "Testing name getter");
-        assertEquals(101, db.getCoursesAL().get(1).getCourseID(), "Testing ID getter");
-        assertEquals("Course 2", db.getCoursesAL().get(1).getCourseName(), "Testing name getter");
+        assertEquals(100, db.getCourses_AL().get(0).getId(), "Testing ID getter");
+        assertEquals("Course 1", db.getCourses_AL().get(0).getCourseName(), "Testing name getter");
+        assertEquals(101, db.getCourses_AL().get(1).getId(), "Testing ID getter");
+        assertEquals("Course 2", db.getCourses_AL().get(1).getCourseName(), "Testing name getter");
     }
 
     @Test

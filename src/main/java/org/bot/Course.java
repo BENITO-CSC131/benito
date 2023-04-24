@@ -18,7 +18,7 @@ public class Course {
         this.courseName = course.getString("name");
     }
 
-    // Methods
+    // Getter for id
     public int getCourseID() {
         return courseID;
     }
