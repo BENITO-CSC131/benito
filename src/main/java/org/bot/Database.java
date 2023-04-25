@@ -34,7 +34,11 @@ public class Database {
      */
     public void courseLOAD(JSONArray courses) throws Exception {
         for (int i = 0; i < courses.length(); i++) {
-            courses_AL.add(new Course(courses.getJSONObject(i)));
+            if (courses.getJSONObject(i).has("name") && courses.getJSONObject(i).has("id")) {
+                courses_AL.add(new Course(courses.getJSONObject(i)));
+            } else {
+                System.out.println("Course " + i + " is missing a field");
+            }
         }
     }
 
@@ -47,7 +51,12 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) throws Exception {
         for (int i = 0; i < assignments.length(); i++) {
-            allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
+            if (assignments.getJSONObject(i).has("id") && assignments.getJSONObject(i).has("name")
+                    && assignments.getJSONObject(i).has("course_id") && assignments.getJSONObject(i).has("due_at")) {
+                allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
+            } else {
+                System.out.println("Assignment " + i + " is missing a field");
+            }
         }
     }
 }
