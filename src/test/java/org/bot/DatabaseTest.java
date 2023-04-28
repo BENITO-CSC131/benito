@@ -1,15 +1,15 @@
 package org.bot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class DatabaseTest {
     JSONArray jsonCourses = new JSONArray();
@@ -41,8 +41,7 @@ public class DatabaseTest {
         jsonAssignment.put("due_at", "2023-04-23T06:59:59Z");
         jsonAssignment.put("course_id", 100);
         jsonAssignment.put("has_submitted_submissions", true);
-        jsonAssignment.put("description",
-                "This is an assignment, but this description shouldn't show up in assignment list.");
+        jsonAssignment.put("description", "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
 
         jsonAssignment = new JSONObject();
@@ -51,16 +50,91 @@ public class DatabaseTest {
         jsonAssignment.put("due_at", "2023-04-24T06:59:59Z");
         jsonAssignment.put("course_id", 101);
         jsonAssignment.put("has_submitted_submissions", true);
-        jsonAssignment.put("description",
-                "This is an assignment, but this description shouldn't show up in assignment list.");
+        jsonAssignment.put("description", "This is an assignment, but this description shouldn't show up in assignment list.");
         jsonAssignments.put(jsonAssignment);
+    }
+
+    @Test
+    void clear() {
+        db = new Database();
+        db.courseLOAD(jsonCourses);
+        db.assLOAD(jsonAssignments);
+        db.clear();
+
+        assertEquals(0, db.getCourses_AL().size(), "Database should be cleared");
+        assertEquals(0, db.getAllAss_AL().size(), "Database should be cleared");
+    }
+
+    // Testing that getters and setters return the right type
+    @Test
+    void testGetCourses_AL() {
+        db = new Database();
+        db.courseLOAD(jsonCourses);
+
+        assertNotNull(db.getCourses_AL());
+    }
+
+    @Test
+    void testGetAllAss_AL() {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getAllAss_AL());
+    }
+
+    @Test
+    void testGetUpcomingAss_AL() {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getUpcomingAss_AL());
+    }
+
+    @Test
+    void testSetUpcomingAss_AL() {
+        db = new Database();
+        db.setUpcomingAss_AL(new ArrayList<>());
+
+        assertNotNull(db.getUpcomingAss_AL());
+    }
+
+    @Test
+    void getPastSubmittedAss_AL() {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getPastSubmittedAss_AL());
+    }
+
+    @Test
+    void setPastSubmittedAss_AL() {
+        db = new Database();
+        db.setPastSubmittedAss_AL(new ArrayList<>());
+
+        assertNotNull(db.getPastSubmittedAss_AL());
+    }
+
+    @Test
+    void getOverdueAss_AL() {
+        db = new Database();
+        db.assLOAD(jsonAssignments);
+
+        assertNotNull(db.getOverdueAss_AL());
+    }
+
+    @Test
+    void setOverdueAss_AL() {
+        db = new Database();
+        db.setOverdueAss_AL(new ArrayList<>());
+
+        assertNotNull(db.getOverdueAss_AL());
     }
 
     @Nested
     class courseLOADTests {
 
         @Test
-        void testCourseLOAD() throws Exception {
+        void testCourseLOAD() {
             db = new Database();
             db.courseLOAD(jsonCourses);
 
@@ -74,7 +148,7 @@ public class DatabaseTest {
         }
 
         @Test
-        void testCourseLOADEmpty() throws Exception {
+        void testCourseLOADEmpty() {
             db = new Database();
             db.courseLOAD(new JSONArray());
 
@@ -82,7 +156,7 @@ public class DatabaseTest {
         }
 
         @Test
-        void testCourseLOADMissingField() throws Exception {
+        void testCourseLOADMissingField() {
             db = new Database();
             jsonCourse = new JSONObject();
             jsonCourse.put("id", 100);
@@ -93,7 +167,7 @@ public class DatabaseTest {
         }
 
         @Test
-        void testCourseLOADNullField() throws Exception {
+        void testCourseLOADNullField() {
             db = new Database();
             jsonCourse = new JSONObject();
             jsonCourse.put("id", 100);
@@ -109,7 +183,7 @@ public class DatabaseTest {
     class assLOADTests {
 
         @Test
-        void testAssLOAD() throws Exception {
+        void testAssLOAD() {
             db = new Database();
             db.assLOAD(jsonAssignments);
 
@@ -118,19 +192,17 @@ public class DatabaseTest {
             // Checking that the assignments were loaded correctly
             assertEquals(1000, db.getAllAss_AL().get(0).getAssID(), "Testing ID getter");
             assertEquals("Assignment 1", db.getAllAss_AL().get(0).getAssName(), "Testing name getter");
-            assertEquals("2023-04-23T06:59:59Z", db.getAllAss_AL().get(0).getAssDate().toString(),
-                    "Testing date getter");
+            assertEquals("2023-04-23T06:59:59Z", db.getAllAss_AL().get(0).getAssDate(), "Testing date getter");
             assertEquals(100, db.getAllAss_AL().get(0).getCourseID(), "Testing courseID getter");
 
             assertEquals(1010, db.getAllAss_AL().get(1).getAssID(), "Testing ID getter");
             assertEquals("Assignment 1", db.getAllAss_AL().get(1).getAssName(), "Testing name getter");
-            assertEquals("2023-04-24T06:59:59Z", db.getAllAss_AL().get(1).getAssDate().toString(),
-                    "Testing date getter");
+            assertEquals("2023-04-24T06:59:59Z", db.getAllAss_AL().get(1).getAssDate(), "Testing date getter");
             assertEquals(101, db.getAllAss_AL().get(1).getCourseID(), "Testing courseID getter");
         }
 
         @Test
-        void testAssLOADEmpty() throws Exception {
+        void testAssLOADEmpty() {
             db = new Database();
             db.assLOAD(new JSONArray());
 
@@ -138,7 +210,7 @@ public class DatabaseTest {
         }
 
         @Test
-        void testAssLOADMissingField() throws Exception {
+        void testAssLOADMissingField() {
             db = new Database();
             jsonAssignment = new JSONObject();
             jsonAssignment.put("id", 1000);
@@ -150,7 +222,7 @@ public class DatabaseTest {
         }
 
         @Test
-        void testAssLOADNullField() throws Exception {
+        void testAssLOADNullField() {
             db = new Database();
             jsonAssignment = new JSONObject();
             jsonAssignment.put("id", 1000);
@@ -161,39 +233,6 @@ public class DatabaseTest {
             assertEquals(2, db.getAllAss_AL().size(), "Database should refuse to load assignments with null fields");
         }
 
-    }
-
-    // Testing that getters and setters return the right type
-    @Test
-    void testGetCourses_AL() throws Exception {
-        db = new Database();
-        db.courseLOAD(jsonCourses);
-
-        assertTrue(db.getCourses_AL() instanceof ArrayList);
-    }
-
-    @Test
-    void testGetAllAss_AL() throws Exception {
-        db = new Database();
-        db.assLOAD(jsonAssignments);
-
-        assertTrue(db.getAllAss_AL() instanceof ArrayList);
-    }
-
-    @Test
-    void testGetUpcomingAss_AL() throws Exception {
-        db = new Database();
-        db.assLOAD(jsonAssignments);
-
-        assertTrue(db.getUpcomingAss_AL() instanceof ArrayList);
-    }
-
-    @Test
-    void testSetUpcomingAss_AL() throws Exception {
-        db = new Database();
-        db.setUpcomingAss_AL(new ArrayList<Assignment>());
-
-        assertTrue(db.getUpcomingAss_AL() instanceof ArrayList);
     }
 
 }
