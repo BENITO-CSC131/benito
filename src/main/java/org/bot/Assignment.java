@@ -1,10 +1,10 @@
 package org.bot;
 
+import org.json.JSONObject;
+
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-
-import org.json.JSONObject;
 
 public class Assignment {
     private final int courseID;
@@ -22,7 +22,8 @@ public class Assignment {
         this.has_submitted_submissions = assignment.getBoolean("has_submitted_submissions");
         this.assDate = assignment.getString("due_at");
         this.assDateFormat = ZonedDateTime.parse(assDate, DateTimeFormatter.ISO_DATE_TIME)
-                .withZoneSameInstant(java.time.ZoneId.systemDefault()).toLocalDateTime();
+                .withZoneSameInstant(java.time.ZoneId.systemDefault())
+                .toLocalDateTime();
     }
 
     // methods
@@ -46,5 +47,7 @@ public class Assignment {
         return assDateFormat;
     }
 
-    public boolean getHasBeenSubmited(){return has_submitted_submissions;}
+    public boolean getHasBeenSubmited() {
+        return has_submitted_submissions;
+    }
 }
