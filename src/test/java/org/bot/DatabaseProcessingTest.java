@@ -1,12 +1,12 @@
 package org.bot;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DatabaseProcessingTest {
     JSONObject assignment;
@@ -83,5 +83,36 @@ public class DatabaseProcessingTest {
         assertEquals("Test Assignment", pastSubmitted.get(0).getAssName(), "Test Assignment should be first");
         assertEquals("Test Past Submitted Assignment", pastSubmitted.get(1).getAssName(),
                 "Test Past Submitted Assignment should be second");
+    }
+
+    @Test
+    void testUndated() {
+        // Creating 2 undated assignments
+        assignment = new JSONObject();
+        assignment.put("id", 100);
+        assignment.put("name", "Test Undated Assignment 1");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 2000);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        assignment = new JSONObject();
+        assignment.put("id", 101);
+        assignment.put("name", "Test Undated Assignment 2");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 1000);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        ArrayList<Assignment> undated = Database.undated(assignments);
+
+        // Should be 2 undated assignments
+        assertEquals(2, undated.size(), "Only the one undated assignment should appear");
+
+        // Should be in order of course_id least-to-greatest
+        assertEquals("Test Undated Assignment 2", undated.get(0).getAssName(), "2 (course_id: 1000) should be first");
+        assertEquals("Test Undated Assignment 1", undated.get(1).getAssName(), "1 (course_id: 2000) should be second");
     }
 }

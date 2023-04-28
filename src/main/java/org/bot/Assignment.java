@@ -10,7 +10,7 @@ public class Assignment {
     private final int courseID;
     private final int assID;
     private final String assName;
-    private final String assDate;
+    private final String assDateString;
     private final Boolean has_submitted_submissions;
     private final LocalDateTime assDateFormat;
 
@@ -20,10 +20,16 @@ public class Assignment {
         this.assID = assignment.getInt("id");
         this.assName = assignment.getString("name");
         this.has_submitted_submissions = assignment.getBoolean("has_submitted_submissions");
-        this.assDate = assignment.getString("due_at");
-        this.assDateFormat = ZonedDateTime.parse(assDate, DateTimeFormatter.ISO_DATE_TIME)
-                .withZoneSameInstant(java.time.ZoneId.systemDefault())
-                .toLocalDateTime();
+
+        if (assignment.isNull("due_at")) {
+            this.assDateString = null;
+            this.assDateFormat = null;
+        } else {
+            this.assDateString = assignment.getString("due_at");
+            this.assDateFormat = ZonedDateTime.parse(assDateString, DateTimeFormatter.ISO_DATE_TIME)
+                    .withZoneSameInstant(java.time.ZoneId.systemDefault())
+                    .toLocalDateTime();
+        }
     }
 
     // methods
@@ -39,8 +45,8 @@ public class Assignment {
         return assName;
     }
 
-    public String getAssDate() {
-        return assDate;
+    public String getAssDateString() {
+        return assDateString;
     }
 
     public LocalDateTime getDateFormat() {

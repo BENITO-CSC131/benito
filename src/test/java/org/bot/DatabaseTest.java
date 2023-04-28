@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DatabaseTest {
     JSONArray jsonCourses = new JSONArray();
@@ -208,12 +207,12 @@ public class DatabaseTest {
             // Checking that the assignments were loaded correctly
             assertEquals(1000, db.getAllAss_AL().get(0).getAssID(), "Testing ID getter");
             assertEquals("Assignment 1", db.getAllAss_AL().get(0).getAssName(), "Testing name getter");
-            assertEquals("2023-04-23T06:59:59Z", db.getAllAss_AL().get(0).getAssDate(), "Testing date getter");
+            assertEquals("2023-04-23T06:59:59Z", db.getAllAss_AL().get(0).getAssDateString(), "Testing date getter");
             assertEquals(100, db.getAllAss_AL().get(0).getCourseID(), "Testing courseID getter");
 
             assertEquals(1010, db.getAllAss_AL().get(1).getAssID(), "Testing ID getter");
             assertEquals("Assignment 1", db.getAllAss_AL().get(1).getAssName(), "Testing name getter");
-            assertEquals("2023-04-24T06:59:59Z", db.getAllAss_AL().get(1).getAssDate(), "Testing date getter");
+            assertEquals("2023-04-24T06:59:59Z", db.getAllAss_AL().get(1).getAssDateString(), "Testing date getter");
             assertEquals(101, db.getAllAss_AL().get(1).getCourseID(), "Testing courseID getter");
         }
 
@@ -239,14 +238,23 @@ public class DatabaseTest {
 
         @Test
         void testAssLOADNullField() {
+            // With null date
             db = new Database();
             jsonAssignment = new JSONObject();
-            jsonAssignment.put("id", 1000);
-            jsonAssignment.put("name", JSONObject.NULL);
+            jsonAssignment.put("id", 1010);
+            jsonAssignment.put("name", "Assignment 1");
+            jsonAssignment.put("due_at", JSONObject.NULL);
+            jsonAssignment.put("course_id", 101);
+            jsonAssignment.put("has_submitted_submissions", true);
             jsonAssignments.put(jsonAssignment);
             db.assLOAD(jsonAssignments);
 
-            assertEquals(2, db.getAllAss_AL().size(), "Database should refuse to load assignments with null fields");
+            // Checking that null date loaded correctly
+            assertNull(db.getAllAss_AL().get(2).getAssDateString(), "Database should load null date fields as null");
+
+            // Checking that null date is added to allAssignments_AL
+            assertEquals(3, db.getAllAss_AL().size(), "Database should load assignments with null fields");
+
         }
 
     }

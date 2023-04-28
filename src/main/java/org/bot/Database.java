@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -100,8 +101,13 @@ public class Database {
             }
         }
 
-        // Sorts assignments by due date, closest to today first
-        undated.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+        // Sort undated by courseID
+        undated.sort(new Comparator<Assignment>() {
+            @Override
+            public int compare(Assignment o1, Assignment o2) {
+                return o1.getCourseID() - o2.getCourseID();
+            }
+        });
 
         return undated;
     }
@@ -116,18 +122,19 @@ public class Database {
      * @return true if the JSONObject has non-null values for all the given keys,
      * and false otherwise.
      */
-    private static boolean hasNonNullValues(JSONObject obj, String... keys) {
+    private static boolean hasValues(JSONObject obj, String... keys) {
         for (String key : keys) {
-            if (!obj.has(key) || obj.isNull(key)) {
+//            if (!obj.has(key) || obj.isNull(key)) {
+            if (!obj.has(key)) {
                 return false;
             }
         }
         return true;
     }
 
-    private static boolean hasNonNullValues(ArrayList<?> list, String... keys) {
+    private static boolean hasNonNullValues(JSONObject obj, String... keys) {
         for (String key : keys) {
-            if (!list.contains(key) || list.contains(JSONObject.NULL)) {
+            if (!obj.has(key) || obj.isNull(key)) {
                 return false;
             }
         }
@@ -209,10 +216,11 @@ public class Database {
      */
     public void assLOAD(JSONArray assignments) {
         for (int i = 0; i < assignments.length(); i++) {
-            if (hasNonNullValues(assignments.getJSONObject(i), "id", "name", "due_at", "course_id", "has_submitted_submissions")) {
+            if (hasValues(assignments.getJSONObject(i), "course_id", "id", "name", "has_submitted_submissions", "due_at")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
-            } else {
+//            } else {
                 System.out.println("Assignment " + i + " is missing a field");
+//            }
             }
         }
     }
