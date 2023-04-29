@@ -48,6 +48,20 @@ public class DatabaseProcessingTest {
         assertEquals(2, upcoming.size(), "Only the two assignments due in the future should be returned");
         assertEquals("Test Assignment 2", upcoming.get(0).getAssName(), "Test Assignment 2 should be first");
         assertEquals("Test Assignment 3", upcoming.get(1).getAssName(), "Test Assignment 3 should be second");
+
+        // Testing for null due date
+        assignment = new JSONObject();
+        assignment.put("id", 1000);
+        assignment.put("name", "Test Assignment 4");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+        assignments.add(new Assignment(assignment));
+
+        upcoming = Database.upcomingDue(assignments);
+
+        // New assignment shouldn't be included
+        assertEquals(2, upcoming.size(), "Size should still be 2");
     }
 
     @Test
@@ -65,6 +79,20 @@ public class DatabaseProcessingTest {
         ArrayList<Assignment> overdue = Database.overDue(assignments);
         assertEquals(1, overdue.size(), "Only the one assignment in past and unsubmitted should appear");
         assertEquals("Test Overdue Assignment", overdue.get(0).getAssName(), "Test Overdue Assignment should be first");
+
+        // Testing for null due date
+        assignment = new JSONObject();
+        assignment.put("id", 1000);
+        assignment.put("name", "Test Overdue Assignment");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", false);
+
+        assignments.add(new Assignment(assignment));
+
+        // New assignment shouldn't be included
+        assertEquals(1, overdue.size(), "Size should still be 1");
+
     }
 
     @Test
@@ -72,7 +100,7 @@ public class DatabaseProcessingTest {
         assignment = new JSONObject();
         assignment.put("id", 100);
         assignment.put("name", "Test Past Submitted Assignment");
-        assignment.put("due_at", "2021-04-19T23:59:00Z");
+        assignment.put("due_at", "2021-04-20T23:59:00Z");
         assignment.put("course_id", 12345);
         assignment.put("has_submitted_submissions", true);
 
@@ -83,6 +111,19 @@ public class DatabaseProcessingTest {
         assertEquals("Test Assignment", pastSubmitted.get(0).getAssName(), "Test Assignment should be first");
         assertEquals("Test Past Submitted Assignment", pastSubmitted.get(1).getAssName(),
                 "Test Past Submitted Assignment should be second");
+
+        // Testing for null due date
+        assignment = new JSONObject();
+        assignment.put("id", 100);
+        assignment.put("name", "Test Overdue Assignment");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", false);
+
+        assignments.add(new Assignment(assignment));
+
+        // New assignment shouldn't be included
+        assertEquals(2, pastSubmitted.size(), "Size should still be 2");
     }
 
     @Test

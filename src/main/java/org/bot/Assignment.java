@@ -32,6 +32,10 @@ public class Assignment {
         }
     }
 
+    public boolean hasDueDate() {
+        return assDateFormat != null;
+    }
+
     // methods
     public int getCourseID() {
         return courseID;

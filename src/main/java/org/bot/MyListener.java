@@ -95,8 +95,6 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                // channel.sendMessage(messageBuilder(App.db.getUpcomingAss_AL(),
-                // "name")).queue();
                 for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
                 }
@@ -167,6 +165,39 @@ public class MyListener extends ListenerAdapter {
 
                 for (int i = 0; i < App.db.getPastSubmittedAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getPastSubmittedAss_AL().get(i).getAssName()).queue();
+                }
+            }
+
+            case "!undated" -> {
+                MessageChannel channel = event.getChannel();
+                if (App.db.getCourses_AL().isEmpty()) {
+                    channel.sendMessage("Getting Classes").queue();
+
+                    try {
+                        App.db.courseLOAD(CanvasGet.getCourses());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if (App.db.getAllAss_AL().isEmpty()) {
+                    channel.sendMessage("Getting All Assignments").queue();
+
+                    try {
+                        App.db.assLOAD(CanvasGet.getAllAssignments());
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                channel.sendMessage("Getting Undated Assignments").queue();
+                try {
+                    App.db.setUndatedAss_AL(Database.undated(App.db.getAllAss_AL()));
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+                for (int i = 0; i < App.db.getUndatedAss_AL().size(); i++) {
+                    channel.sendMessage(App.db.getUndatedAss_AL().get(i).getAssName()).queue();
                 }
             }
         }

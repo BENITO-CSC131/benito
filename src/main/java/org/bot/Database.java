@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 /**
  * Stores all info retrieved from the Canvas API.
@@ -36,8 +35,10 @@ public class Database {
 
         // Filters out overdue assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
-                upcoming.add(a);
+            if (a.hasDueDate()) {
+                if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
+                    upcoming.add(a);
+                }
             }
         }
 
@@ -53,17 +54,18 @@ public class Database {
      * today first
      *
      * @param allAssignments the list of all assignments
-     * @return a sorted list of overdue assignments
+     * @return a sorted list of overdue assignments, sorted by due date, closest to today first
      */
-
     public static ArrayList<Assignment> overDue(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> overdue = new ArrayList<>();
         today = LocalDateTime.now();
 
         // Filters out upcoming assignments
         for (Assignment a : allAssignments) {
-            if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmited()) {
-                overdue.add(a);
+            if (a.hasDueDate()) {
+                if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmited()) {
+                    overdue.add(a);
+                }
             }
         }
 
@@ -73,14 +75,22 @@ public class Database {
         return overdue;
     }
 
+    /**
+     * Filters out past and submitted assignments from given assignments into a new ArrayList
+     *
+     * @param allAssignments the list of all assignments
+     * @return a sorted list of past submitted assignments, sorted by due date, closest to today first
+     */
     public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> pastSubmitted = new ArrayList<>();
         today = LocalDateTime.now();
 
         // Filters out past/submitted assignments
         for (Assignment a : allAssignments) {
-            if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited()) {
-                pastSubmitted.add(a);
+            if (a.hasDueDate()) {
+                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited()) {
+                    pastSubmitted.add(a);
+                }
             }
         }
 
@@ -90,6 +100,13 @@ public class Database {
         return pastSubmitted;
     }
 
+    /**
+     * Filters out undated assignments from given assignments into a new ArrayList.
+     * Returns an Arraylist of undated assignments, sorted by courseID.
+     *
+     * @param allAssignments the list of all assignments
+     * @return a sorted list of undated assignments, sorted by courseID
+     */
     public static ArrayList<Assignment> undated(ArrayList<Assignment> allAssignments) {
         ArrayList<Assignment> undated = new ArrayList<>();
         today = LocalDateTime.now();
@@ -102,18 +119,13 @@ public class Database {
         }
 
         // Sort undated by courseID
-        undated.sort(new Comparator<Assignment>() {
-            @Override
-            public int compare(Assignment o1, Assignment o2) {
-                return o1.getCourseID() - o2.getCourseID();
-            }
-        });
+        undated.sort((o1, o2) -> o1.getCourseID() - o2.getCourseID());
 
         return undated;
     }
 
     /**
-     * Returns true if the given JSONObject has non-null values for all the given
+     * Returns true if the given JSONObject has values for all the given
      * keys,
      * and false otherwise.
      *
@@ -132,6 +144,16 @@ public class Database {
         return true;
     }
 
+    /**
+     * Returns true if the given JSONObject has non-null values for all the given
+     * keys,
+     * and false otherwise.
+     *
+     * @param obj  the JSONObject to check
+     * @param keys the keys to check for non-null values
+     * @return true if the JSONObject has non-null values for all the given keys,
+     * and false otherwise.
+     */
     private static boolean hasNonNullValues(JSONObject obj, String... keys) {
         for (String key : keys) {
             if (!obj.has(key) || obj.isNull(key)) {
