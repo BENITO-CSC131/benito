@@ -97,10 +97,18 @@ public class CanvasGet {
     
                     // Unpacking each JSONArray received from each url and
                     // Recombining into a single mega-JSONArray
+                    for (int i = 0; i < assignmentsSingleCourse.length(); i++) {
+                        JSONObject assignment = assignmentsSingleCourse.getJSONObject(i);
+                        allAssignments.put(assignment);
+                        System.out.println(assignment);
+                    }
+                    /*bugged version
                     for (int i = 0; i < Objects.requireNonNull(assignmentsSingleCourse).length(); i++) {
                         JSONObject assignment = assignmentsSingleCourse.getJSONObject(i);
                         allAssignments.put(assignment);
                     }
+                    */
+
     
                     // Check if there are more assignments to retrieve
                     if (assignmentsSingleCourse.length() == 0) {

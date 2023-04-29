@@ -19,9 +19,19 @@ public class Assignment {
         this.courseID = assignment.getInt("course_id");
         this.assID = assignment.getInt("id");
         this.assName = assignment.getString("name");
-        this.assDate = assignment.getString("due_at");
-        this.assDateFormat = ZonedDateTime.parse(assDate, DateTimeFormatter.ISO_DATE_TIME)
-                .withZoneSameInstant(java.time.ZoneId.systemDefault()).toLocalDate();
+
+        Object value = assignment.get("due_at");
+        if (value == JSONObject.NULL){
+            assDate = "null";
+            assDateFormat = null;
+        }
+        else
+        {
+            this.assDate = assignment.getString("due_at");
+            this.assDateFormat = ZonedDateTime.parse(assDate, DateTimeFormatter.ISO_DATE_TIME)
+                    .withZoneSameInstant(java.time.ZoneId.systemDefault()).toLocalDate();
+        }
+
     }
 
     // methods
