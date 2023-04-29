@@ -240,9 +240,8 @@ public class Database {
         for (int i = 0; i < assignments.length(); i++) {
             if (hasValues(assignments.getJSONObject(i), "course_id", "id", "name", "has_submitted_submissions", "due_at")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
-//            } else {
+            } else {
                 System.out.println("Assignment " + i + " is missing a field");
-//            }
             }
         }
     }
