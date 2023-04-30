@@ -1,5 +1,6 @@
 package org.bot;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -11,9 +12,10 @@ public class MyListener extends ListenerAdapter {
 
         if (event.getAuthor().isBot())
             return;
-
+        MessageHandler msgHandler = new MessageHandler();
         Message message = event.getMessage();
         String content = message.getContentRaw();
+        JDA bot = event.getJDA();
 
         switch (content) {
             case "!ping" -> {
@@ -35,9 +37,11 @@ public class MyListener extends ListenerAdapter {
                 }
 
                 // channel.sendMessage(messageBuilder(App.db.getCourses_AL(), "name")).queue();
-                for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
-                    channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
-                }
+                //for (int i = 0; i < App.db.getCourses_AL().size(); i++) {
+                //    channel.sendMessage(App.db.getCourses_AL().get(i).getCourseName()).queue();
+                //}
+                msgHandler.coursesToMessages(App.db.getCourses_AL());
+                msgHandler.print(event.getChannel());
             }
 
             // Temp; UI guys redo this
