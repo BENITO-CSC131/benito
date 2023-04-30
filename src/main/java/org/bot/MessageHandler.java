@@ -101,7 +101,6 @@ public class MessageHandler
     {
         String incomingString;
         String compiledString = "";
-        boolean completed = false;
         int totalLines = 0;
         Scanner getter;
         for(int arrayIndex = 0; arrayIndex <= currentindex && totalLines < lines; arrayIndex++)

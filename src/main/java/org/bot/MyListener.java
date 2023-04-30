@@ -15,7 +15,6 @@ public class MyListener extends ListenerAdapter {
         MessageHandler msgHandler = new MessageHandler();
         Message message = event.getMessage();
         String content = message.getContentRaw();
-        JDA bot = event.getJDA();
 
         switch (content) {
             case "!ping" -> {
@@ -99,9 +98,12 @@ public class MyListener extends ListenerAdapter {
                 }
 
                 // channel.sendMessage(messageBuilder(App.db.getUpcomingAss_AL(), "name")).queue();
-                for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
+                /*for (int i = 0; i < App.db.getUpcomingAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getUpcomingAss_AL().get(i).getAssName()).queue();
-                }
+                }*/
+                msgHandler.assmtsToMessages(App.db.getUpcomingAss_AL());
+                msgHandler.print(event.getChannel());
+
             }
         }
     }
