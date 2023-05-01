@@ -1,12 +1,8 @@
 package org.bot;
 
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
-import java.nio.channels.Channel;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class MessageHandler
 {
@@ -15,7 +11,6 @@ public class MessageHandler
     private static final String assFormat = "[**%s**]->*%s* - %s\n";
     private static final String courseFormat = "***%s***\n";
     private int currentindex = 0;
-    private int getSize() { return 0; }
 
     public  MessageHandler()
     {
@@ -88,27 +83,25 @@ public class MessageHandler
         }
     }
 
-    /**
-     * This gets the ArrayList of all the formatted objects
-     *
-     * @throws Exception if there is an error while loading the Course objects
+    /*
+      This gets the ArrayList of all the formatted objects
+
+      @throws Exception if there is an error while loading the Course objects
      */
-    public ArrayList<String> getAllMessages() throws Exception
+    /*public ArrayList<String> getAllMessages() throws Exception
     {
         return this.content;
-    }
+    }*/
     /**
      * This gets the String of all the formatted objects at the ArrayList's index
      *
-     * @param index this gets an element of the formatted ArrayList
-     * @throws Exception if there is an error while loading the Course objects
      */
-    public String getByIndex(int index)
+    /*public String getByIndex(int index)
     {
         return this.content.get(index);
-    }
+    }*/
 
-    public String getLines(int lines)
+    /*public String getLines(int lines)
     {
         String incomingString;
         String compiledString = "";
@@ -128,7 +121,7 @@ public class MessageHandler
         }
         return compiledString;
     }
-
+    */
 
     public void print(MessageChannel channel)
     {
