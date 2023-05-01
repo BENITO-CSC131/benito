@@ -111,8 +111,12 @@ public class MyListener extends ListenerAdapter {
                 channel.sendMessage("!ping - Pong!\n" +
                         "!shutdown - Turn off the bot\n" +
                         "!hw - Displays All Homework from all Courses\n" +
-                        "!upcoming - Displays All Upcoming Homework Assignments" +
-                        "!help - view these same commands again").queue();
+                        "!upcoming - Displays All Upcoming Homework Assignments\n" +
+                        "!help - view these same commands again\n" +
+                        "!overdue - Displays overdue assignments\n" +
+                        "!past - Displays any past assignments\n" +
+                        "!undated - Displays any undated assignments\n" +
+                        "!submitted - Displays any submitted Assignments\n").queue();
             }
 
             // Temp; UI guys redo this
@@ -143,6 +147,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
+                msgHandler.assmtsToMessages(App.db.getOverdueAss_AL());
+                msgHandler.print(event.getChannel());
+                msgHandler.clear();
                /* for (int i = 0; i < App.db.getOverdueAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getOverdueAss_AL().get(i).getAssName()).queue();
                 }*/
@@ -175,6 +182,9 @@ public class MyListener extends ListenerAdapter {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
+                msgHandler.assmtsToMessages(App.db.getPastSubmittedAss_AL());
+                msgHandler.print(event.getChannel());
+                msgHandler.clear();
 
                /* for (int i = 0; i < App.db.getPastSubmittedAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getPastSubmittedAss_AL().get(i).getAssName()).queue();
@@ -208,6 +218,9 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
+                msgHandler.assmtsToMessages(App.db.getUndatedAss_AL());
+                msgHandler.print(event.getChannel());
+                msgHandler.clear();
                 /*for (int i = 0; i < App.db.getUndatedAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getUndatedAss_AL().get(i).getAssName()).queue();
                 }*/
@@ -240,7 +253,9 @@ public class MyListener extends ListenerAdapter {
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-
+                msgHandler.assmtsToMessages(App.db.getPastSubmittedAss_AL());
+                msgHandler.print(event.getChannel());
+                msgHandler.clear();
                 /*for (int i = 0; i < App.db.getPastSubmittedAss_AL().size(); i++) {
                     channel.sendMessage(App.db.getPastSubmittedAss_AL().get(i).getAssName()).queue();
                 }*/
