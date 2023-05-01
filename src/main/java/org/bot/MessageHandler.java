@@ -12,7 +12,7 @@ public class MessageHandler
 {
     public ArrayList<String> content = new ArrayList<>();
     private static final int MAX_CHAR_COUNT = 2000;
-    private static final String assFormat = "[%d]->[%d]: %s - %s\n";
+    private static final String assFormat = "[%s]->[%d]: %s - %s\n";
     private static final String courseFormat = "[%d]: %s\n";
     private int currentindex = 0;
     private int getSize() { return 0; }

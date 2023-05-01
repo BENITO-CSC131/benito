@@ -54,7 +54,8 @@ public class Database {
             if (hasNonNullValues(courses.getJSONObject(i), "name", "id")) {
                 courses_AL.add(new Course(courses.getJSONObject(i)));
             } else {
-                System.out.println("Course " + i + " is missing a field");
+                //System.out.println("Course " + i + " is missing a field");
+                courses_AL.add(new Course(courses.getJSONObject(i)));
             }
         }
     }
@@ -71,7 +72,7 @@ public class Database {
             if (hasNonNullValues(assignments.getJSONObject(i), "name", "due_at", "course_id")) {
                 allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             } else {
-                System.out.println("Assignment " + i + " is missing a field");
+                allAss_AL.add(new Assignment(assignments.getJSONObject(i)));
             }
         }
     }
