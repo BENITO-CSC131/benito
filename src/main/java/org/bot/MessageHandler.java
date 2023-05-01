@@ -12,8 +12,8 @@ public class MessageHandler
 {
     public ArrayList<String> content = new ArrayList<>();
     private static final int MAX_CHAR_COUNT = 2000;
-    private static final String assFormat = "[%d]->[%d]: %s - %s\n";
-    private static final String courseFormat = "[%d]: %s\n";
+    private static final String assFormat = "[**%s**]->*%s* - %s\n";
+    private static final String courseFormat = "***%s***\n";
     private int currentindex = 0;
     private int getSize() { return 0; }
 
@@ -22,16 +22,27 @@ public class MessageHandler
         this.content.add("");
     }
 
+    private String courseById(int assCourseId, ArrayList<Course> courses)
+    {
+        for (Course course : courses) {
+            if (course.getCourseID() == assCourseId)
+            {
+                return course.getCourseName();
+            }
+        }
+        return "[CourseNotFound]";
+    }
+
     private String formatCourse(Course object)
     {
         //all messages need to be formatted using
-        return String.format(courseFormat, object.getCourseID(), object.getCourseName());
+        return String.format(courseFormat, object.getCourseName());
     }
 
     private String formatAssignment(Assignment object)
     {
         //all messages need to be formatted using
-        return String.format(assFormat, object.getCourseID(), object.getAssID(), object.getAssName(), object.getAssDate());
+        return String.format(assFormat, courseById(object.getCourseID(), App.db.getCourses_AL()), object.getAssName(), object.getAssDate());
     }    
 
     public void coursesToMessages(ArrayList<Course> courses)
@@ -126,6 +137,10 @@ public class MessageHandler
         }
     }
 
+    public void clear()
+    {
+        this.content.clear();
+    }
 
 
 

@@ -15,16 +15,19 @@ public class MyListener extends ListenerAdapter {
         MessageHandler msgHandler = new MessageHandler();
         Message message = event.getMessage();
         String content = message.getContentRaw();
-
+        MessageChannel channel = event.getChannel();
         switch (content) {
             case "!ping" -> {
-                MessageChannel channel = event.getChannel();
                 channel.sendMessage("Pong!").queue();
             }
-            
+
+            case "!shutdown" -> {
+                channel.sendMessage("Shutting Down... Thank you for using me! -Benito Team").queue();
+                channel.getJDA().shutdown();
+            }
+
             // Temp; UI guys redo this
             case "!courses" -> {
-                MessageChannel channel = event.getChannel();
 
                 if (App.db.getCourses_AL().isEmpty()) {
                     channel.sendMessage("Getting classes").queue();
@@ -41,11 +44,12 @@ public class MyListener extends ListenerAdapter {
                 //}
                 msgHandler.coursesToMessages(App.db.getCourses_AL());
                 msgHandler.print(event.getChannel());
+                msgHandler.clear();
             }
+
 
             // Temp; UI guys redo this
             case "!hw" -> {
-                MessageChannel channel = event.getChannel();
 
                 if (App.db.getCourses_AL().isEmpty()) {
                     channel.sendMessage("Getting Classes").queue();
@@ -63,14 +67,14 @@ public class MyListener extends ListenerAdapter {
                     throw new RuntimeException(e);
                 }
 
-                for (int i = 0; i < App.db.getAllAss_AL().size(); i++) {
-                    channel.sendMessage(App.db.getAllAss_AL().get(i).getAssName()).queue();
-                }
+                msgHandler.assmtsToMessages(App.db.getAllAss_AL());
+                msgHandler.print(event.getChannel());
+                msgHandler.clear();
             }
 
             // Temp; UI guys redo this
             case "!upcoming" -> {
-                MessageChannel channel = event.getChannel();
+
                 if (App.db.getCourses_AL().isEmpty()) {
                     channel.sendMessage("Getting Classes").queue();
 
@@ -103,7 +107,15 @@ public class MyListener extends ListenerAdapter {
                 }*/
                 msgHandler.assmtsToMessages(App.db.getUpcomingAss_AL());
                 msgHandler.print(event.getChannel());
+                msgHandler.clear();
+            }
 
+            case "!help" -> {
+                channel.sendMessage("!ping - Pong!\n" +
+                        "!shutdown - Turn off the bot\n" +
+                        "!hw - Displays All Homework from all Courses\n" +
+                        "!upcoming - Displays All Upcoming Homework Assignments" +
+                        "!help - view these same commands again").queue();
             }
         }
     }
