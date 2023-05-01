@@ -2,14 +2,13 @@ package org.bot;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class App {
     static Database db = new Database();
 
     public static void main(String[] args) throws Exception {
-        JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).enableIntents(GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT).build();
+        JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
         builder.addEventListener(new MyListener());
 
         // Pre-populating database
@@ -18,7 +17,5 @@ public class App {
         System.out.println("Populating Assignments");
         db.assLOAD(CanvasGet.getAllAssignments());
         System.out.println("Bot is ready");
-
-
     }
 }
