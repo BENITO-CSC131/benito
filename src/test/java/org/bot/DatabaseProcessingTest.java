@@ -128,4 +128,33 @@ public class DatabaseProcessingTest {
         pastSubmitted = Database.pastSubmitted(assignments);
         assertEquals(2, pastSubmitted.size(), "Null date shouldn't appear");
     }
+
+    @Test
+    void undatedAssignments() {
+        // Null date, should be added
+        assignment = new JSONObject();
+        assignment.put("id", 100);
+        assignment.put("name", "Test Undated Assignment");
+        assignment.put("due_at", JSONObject.NULL);
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        ArrayList<Assignment> undated = Database.undatedAssignments(assignments);
+        assertEquals(1, undated.size(), "Null date should appear");
+        assertEquals("Test Undated Assignment", undated.get(0).getAssName(), "Test Undated Assignment should be first");
+
+        // With date, shouldn't be added
+        assignment.put("id", 300);
+        assignment.put("name", "Test Assignment null date");
+        assignment.put("due_at", "2021-04-19T23:59:00Z");
+        assignment.put("course_id", 12345);
+        assignment.put("has_submitted_submissions", true);
+
+        assignments.add(new Assignment(assignment));
+
+        undated = Database.undatedAssignments(assignments);
+        assertEquals(1, undated.size(), "With date shouldn't appear");
+    }
 }
