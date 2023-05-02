@@ -3,6 +3,7 @@ package org.bot;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 
 public class MessageHandler
 {
@@ -12,12 +13,23 @@ public class MessageHandler
     private static final String courseFormat = "***%s***\n";
     private int currentindex = 0;
 
+    /**
+     * Creates a MessageHandler object initializing the first element of the class' ArrayList
+     * with a blank string
+     *
+     */
     public  MessageHandler()
     {
         this.content.add("");
     }
 
-    private String courseById(int assCourseId, ArrayList<Course> courses)
+    /**
+     * This returns the assignment's parent coursed based off if the id matches the course list provided
+     *
+     * @return The Course name
+     * @throws NoSuchElementException If there is an error retrieving the course from the List
+     */
+    private String courseById(int assCourseId, ArrayList<Course> courses) throws NoSuchElementException
     {
         for (Course course : courses) {
             if (course.getCourseID() == assCourseId)
@@ -28,33 +40,62 @@ public class MessageHandler
         return "[CourseNotFound]";
     }
 
-    private String formatCourse(Course object)
+    /**
+     * Formats the course based on the available elements within the course,
+     * any elements that are not available will be accounted for.
+     *
+     * @return The formatted course name
+     * @throws NoSuchElementException If there is an error retrieving the course from the List
+     */
+    private String formatCourse(Course object) throws NoSuchElementException
     {
         //all messages need to be formatted using
         return String.format(courseFormat, object.getCourseName());
     }
 
-    private String formatAssignment(Assignment object)
+    /**
+     * Formats the assignment based on the available elements within the assignment object.
+     *
+     * @return Formatted String of assignment elements
+     * @throws NoSuchElementException If there is an error retrieving the assignment from the List
+     */
+    private String formatAssignment(Assignment object) throws NoSuchElementException
     {
         //all messages need to be formatted using
         return String.format(assFormat, courseById(object.getCourseID(), App.db.getCourses_AL()), object.getAssName(), object.getAssDate());
-    }    
+    }
 
-    public void coursesToMessages(ArrayList<Course> courses)
+    /**
+     * This takes in a list of courses and passes each course into the formatter courseToMessage
+     *
+     * @throws NoSuchElementException If there is an error retrieving the course from the List
+     */
+    public void coursesToMessages(ArrayList<Course> courses) throws NoSuchElementException
     {
         for (Course course : courses) {
             courseToMessage(course);
         }
     }
 
-    public void assmtsToMessages(ArrayList<Assignment> assignments)
+    /**
+     * This takes in a list of assignments and passes each assignment into the formatter assToMessage
+     *
+     * @throws NoSuchElementException If there is an error retrieving the assignment from the List
+     */
+    public void assmtsToMessages(ArrayList<Assignment> assignments) throws NoSuchElementException
     {
         for (Assignment ass : assignments) {
             assToMessage(ass);
         }
     }
 
-    private void courseToMessage(Course course)
+    /**
+     * Takes the name of the course and formats it for Discord usage, then adds it to
+     * this class' ArrayList.
+     *
+     * @throws NoSuchElementException If there is an error retrieving the course from the List
+     */
+    private void courseToMessage(Course course) throws NoSuchElementException
     {
         String content = formatCourse(course);
 
@@ -69,7 +110,12 @@ public class MessageHandler
         }
     }
 
-    private void assToMessage(Assignment assignment) {
+    /**
+     * Formats the assignment and adds it to the list
+     *
+     * @throws NoSuchElementException If there is an error retrieving the assignment from the List
+     */
+    private void assToMessage(Assignment assignment) throws NoSuchElementException{
         String content = formatAssignment(assignment);
 
         if ((content.length() + this.content.get(currentindex).length()) <= MAX_CHAR_COUNT)
@@ -83,6 +129,28 @@ public class MessageHandler
         }
     }
 
+    /**
+     * Prints the contents of the accumulated courses or assignments to the given channel
+     *
+     * @throws NoSuchElementException If there is an error retrieving the course from the API
+     */
+    public void print(MessageChannel channel)
+    {
+        for (String s : this.content) {
+            channel.sendMessage(s).queue();
+        }
+    }
+
+    /**
+     * Clears the list of assignments or courses that were accumulated (often done to make room
+     * for the next request)
+     *
+     */
+    public void clear()
+    {
+        this.content.clear();
+    }
+
     /*
       This gets the ArrayList of all the formatted objects
 
@@ -92,7 +160,7 @@ public class MessageHandler
     {
         return this.content;
     }*/
-    /**
+    /*
      * This gets the String of all the formatted objects at the ArrayList's index
      *
      */
@@ -122,19 +190,4 @@ public class MessageHandler
         return compiledString;
     }
     */
-
-    public void print(MessageChannel channel)
-    {
-        for (String s : this.content) {
-            channel.sendMessage(s).queue();
-        }
-    }
-
-    public void clear()
-    {
-        this.content.clear();
-    }
-
-
-
 }
