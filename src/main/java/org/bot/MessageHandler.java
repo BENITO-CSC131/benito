@@ -5,21 +5,18 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
-public class MessageHandler
-{
-    public ArrayList<String> content = new ArrayList<>();
+public class MessageHandler {
     private static final int MAX_CHAR_COUNT = 2000;
     private static final String assFormat = "[**%s**]->*%s* - %s\n";
     private static final String courseFormat = "***%s***\n";
+    public ArrayList<String> content = new ArrayList<>();
     private int currentindex = 0;
 
     /**
      * Creates a MessageHandler object initializing the first element of the class' ArrayList
      * with a blank string
-     *
      */
-    public  MessageHandler()
-    {
+    public MessageHandler() {
         this.content.add("");
     }
 
@@ -29,11 +26,9 @@ public class MessageHandler
      * @return The Course name
      * @throws NoSuchElementException If there is an error retrieving the course from the List
      */
-    private String courseById(int assCourseId, ArrayList<Course> courses) throws NoSuchElementException
-    {
+    private String courseById(int assCourseId, ArrayList<Course> courses) throws NoSuchElementException {
         for (Course course : courses) {
-            if (course.getCourseID() == assCourseId)
-            {
+            if (course.getCourseID() == assCourseId) {
                 return course.getCourseName();
             }
         }
@@ -47,8 +42,7 @@ public class MessageHandler
      * @return The formatted course name
      * @throws NoSuchElementException If there is an error retrieving the course from the List
      */
-    private String formatCourse(Course object) throws NoSuchElementException
-    {
+    private String formatCourse(Course object) throws NoSuchElementException {
         //all messages need to be formatted using
         return String.format(courseFormat, object.getCourseName());
     }
@@ -59,8 +53,7 @@ public class MessageHandler
      * @return Formatted String of assignment elements
      * @throws NoSuchElementException If there is an error retrieving the assignment from the List
      */
-    private String formatAssignment(Assignment object) throws NoSuchElementException
-    {
+    private String formatAssignment(Assignment object) throws NoSuchElementException {
         //all messages need to be formatted using
         return String.format(assFormat, courseById(object.getCourseID(), App.db.getCourses_AL()), object.getAssName(), object.getAssDate());
     }
@@ -70,8 +63,7 @@ public class MessageHandler
      *
      * @throws NoSuchElementException If there is an error retrieving the course from the List
      */
-    public void coursesToMessages(ArrayList<Course> courses) throws NoSuchElementException
-    {
+    public void coursesToMessages(ArrayList<Course> courses) throws NoSuchElementException {
         for (Course course : courses) {
             courseToMessage(course);
         }
@@ -82,8 +74,7 @@ public class MessageHandler
      *
      * @throws NoSuchElementException If there is an error retrieving the assignment from the List
      */
-    public void assmtsToMessages(ArrayList<Assignment> assignments) throws NoSuchElementException
-    {
+    public void assmtsToMessages(ArrayList<Assignment> assignments) throws NoSuchElementException {
         for (Assignment ass : assignments) {
             assToMessage(ass);
         }
@@ -95,16 +86,12 @@ public class MessageHandler
      *
      * @throws NoSuchElementException If there is an error retrieving the course from the List
      */
-    private void courseToMessage(Course course) throws NoSuchElementException
-    {
+    private void courseToMessage(Course course) throws NoSuchElementException {
         String content = formatCourse(course);
 
-        if ((content.length() + this.content.get(currentindex).length()) <= MAX_CHAR_COUNT)
-        {
+        if ((content.length() + this.content.get(currentindex).length()) <= MAX_CHAR_COUNT) {
             this.content.set(currentindex, this.content.get(currentindex).concat(content));
-        }
-        else
-        {
+        } else {
             this.currentindex++;
             this.content.add(content);
         }
@@ -115,15 +102,12 @@ public class MessageHandler
      *
      * @throws NoSuchElementException If there is an error retrieving the assignment from the List
      */
-    private void assToMessage(Assignment assignment) throws NoSuchElementException{
+    private void assToMessage(Assignment assignment) throws NoSuchElementException {
         String content = formatAssignment(assignment);
 
-        if ((content.length() + this.content.get(currentindex).length()) <= MAX_CHAR_COUNT)
-        {
+        if ((content.length() + this.content.get(currentindex).length()) <= MAX_CHAR_COUNT) {
             this.content.set(currentindex, this.content.get(currentindex).concat(content));
-        }
-        else
-        {
+        } else {
             this.currentindex++;
             this.content.add(content);
         }
@@ -134,8 +118,7 @@ public class MessageHandler
      *
      * @throws NoSuchElementException If there is an error retrieving the course from the API
      */
-    public void print(MessageChannel channel)
-    {
+    public void print(MessageChannel channel) {
         for (String s : this.content) {
             channel.sendMessage(s).queue();
         }
@@ -144,10 +127,8 @@ public class MessageHandler
     /**
      * Clears the list of assignments or courses that were accumulated (often done to make room
      * for the next request)
-     *
      */
-    public void clear()
-    {
+    public void clear() {
         this.content.clear();
     }
 

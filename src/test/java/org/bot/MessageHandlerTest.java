@@ -1,25 +1,21 @@
 package org.bot;
 
-import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MessageHandlerTest {
     JSONObject jsonAssignment;
     JSONArray jsonAssignments;
     JSONObject jsonCourse;
     JSONArray jsonCourses;
-    Course course;
-    Assignment assignment;
     Database db;
     MessageHandler msgHandler = new MessageHandler();
+
     @BeforeEach
     void setup() {
         db = new Database();
@@ -42,6 +38,7 @@ class MessageHandlerTest {
         jsonCourses.put(jsonCourse);
         db.courseLOAD(jsonCourses);
     }
+
     @Test
     void coursesToMessages() {
         msgHandler.coursesToMessages(db.getCourses_AL());
@@ -51,7 +48,7 @@ class MessageHandlerTest {
     @Test
     void assmtsToMessages() {
         msgHandler.assmtsToMessages(db.getAllAss_AL());
-        assertEquals("[**[CourseNotFound]**]->*Assignment 1* - 2023-04-23T06:59:59Z\n",msgHandler.content.get(0));
+        assertEquals("[**[CourseNotFound]**]->*Assignment 1* - 2023-04-23T06:59:59Z\n", msgHandler.content.get(0));
     }
 
     @Test
@@ -60,8 +57,7 @@ class MessageHandlerTest {
     }
 
     @AfterEach
-    void clearTests()
-    {
+    void clearTests() {
         msgHandler.clear();
     }
 }
