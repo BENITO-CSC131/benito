@@ -9,6 +9,7 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).enableIntents(GatewayIntent.MESSAGE_CONTENT).build();
+//        JDA builder = JDABuilder.createDefault(API_keys.DiscordKey).build();
         builder.addEventListener(new MyListener());
 
         // Pre-populating database
