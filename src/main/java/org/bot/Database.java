@@ -14,12 +14,115 @@ import java.util.Objects;
  */
 public class Database {
     static LocalDateTime today = LocalDateTime.now();
-    public ArrayList<Course> courses_AL = new ArrayList<>();
     private final ArrayList<Assignment> allAss_AL = new ArrayList<>();
+    public ArrayList<Course> courses_AL = new ArrayList<>();
     private ArrayList<Assignment> upcomingAss_AL = new ArrayList<>();
     private ArrayList<Assignment> overdueAss_AL = new ArrayList<>();
     private ArrayList<Assignment> pastSubmittedAss_AL = new ArrayList<>();
     private ArrayList<Assignment> undatedAss_AL = new ArrayList<>();
+
+    /**
+     * upcomingDue method sorts through allASS_AL and only populates based on a
+     * certain set of requirements.
+     * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
+     * 1.must not be current or past time compared to local time
+     *
+     * @param allAssignments, the arraylist of all assignments
+     * @return returns an arraylist to populate the upcoming assignment category
+     */
+    public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> upcoming = new ArrayList<>();
+        today = LocalDateTime.now();
+
+        // Filters out overdue assignments
+        for (Assignment a : allAssignments) {
+            if (!Objects.equals(a.getAssDate(), "null")) {
+                if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
+                    upcoming.add(a);
+                }
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        upcoming.sort((a1, a2) -> a1.getDateFormat().compareTo(a2.getDateFormat()));
+        return upcoming;
+    }
+
+    /**
+     * Filters out overdue assignments from the provided list of assignments and
+     * returns a sorted list of overdue assignments. Sorted by due date, closest to
+     * today first
+     *
+     * @param allAssignments the list of all assignments
+     * @return a sorted list of overdue assignments
+     */
+    public static ArrayList<Assignment> overDue(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> overdue = new ArrayList<>();
+        today = LocalDateTime.now();
+
+        // Filters out upcoming assignments
+        for (Assignment a : allAssignments) {
+            if (!Objects.equals(a.getAssDate(), "null")) {
+                if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmitted()) {
+                    overdue.add(a);
+                }
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        overdue.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+
+        return overdue;
+    }
+
+    public static ArrayList<Assignment> undatedAssignments(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> undated = new ArrayList<>();
+        for (Assignment a : allAssignments) {
+            if (a.getDateFormat() == null) {
+                undated.add(a);
+            }
+        }
+
+        return undated;
+    }
+
+    public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
+        ArrayList<Assignment> pastSubmitted = new ArrayList<>();
+        today = LocalDateTime.now();
+
+        // Filters out past/submitted assignments
+        for (Assignment a : allAssignments) {
+            if (!Objects.equals(a.getAssDate(), "null")) {
+                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmitted()) {
+                    pastSubmitted.add(a);
+                }
+            }
+        }
+
+        // Sorts assignments by due date, closest to today first
+        pastSubmitted.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
+
+        return pastSubmitted;
+    }
+
+    /**
+     * Returns true if the given JSONObject has non-null values for all the given
+     * keys,
+     * and false otherwise.
+     *
+     * @param obj  the JSONObject to check
+     * @param keys the keys to check for non-null values
+     * @return true if the JSONObject has non-null values for all the given keys,
+     * and false otherwise.
+     */
+    private static boolean hasNonNullValues(JSONObject obj, String... keys) {
+        for (String key : keys) {
+            if (!obj.has(key) || obj.isNull(key)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public ArrayList<Assignment> getPastSubmittedAss_AL() {
         return pastSubmittedAss_AL;
@@ -36,7 +139,6 @@ public class Database {
     public void setUndatedAss_AL(ArrayList<Assignment> undatedAss_AL) {
         this.undatedAss_AL = undatedAss_AL;
     }
-
 
     public ArrayList<Assignment> getOverdueAss_AL() {
         return overdueAss_AL;
@@ -94,90 +196,6 @@ public class Database {
     }
 
     /**
-     * upcomingDue method sorts through allASS_AL and only populates based on a
-     * certain set of requirements.
-     * REQUIREMENTS for Assignment Object to enter upcomingAss_AL
-     * 1.must not be current or past time compared to local time
-     *
-     * @param allAssignments, the arraylist of all assignments
-     * @return returns an arraylist to populate the upcoming assignment category
-     */
-    public static ArrayList<Assignment> upcomingDue(ArrayList<Assignment> allAssignments) {
-        ArrayList<Assignment> upcoming = new ArrayList<>();
-        today = LocalDateTime.now();
-
-        // Filters out overdue assignments
-        for (Assignment a : allAssignments) {
-            if (!Objects.equals(a.getAssDate(), "null")) {
-                if (a.getDateFormat().isAfter(today) || a.getDateFormat().isEqual(today)) {
-                    upcoming.add(a);
-                }
-            }
-        }
-
-        // Sorts assignments by due date, closest to today first
-        upcoming.sort((a1, a2) -> a1.getDateFormat().compareTo(a2.getDateFormat()));
-        return upcoming;
-    }
-
-    /**
-     * Filters out overdue assignments from the provided list of assignments and
-     * returns a sorted list of overdue assignments. Sorted by due date, closest to
-     * today first
-     *
-     * @param allAssignments the list of all assignments
-     * @return a sorted list of overdue assignments
-     */
-    public static ArrayList<Assignment> overDue(ArrayList<Assignment> allAssignments) {
-        ArrayList<Assignment> overdue = new ArrayList<>();
-        today = LocalDateTime.now();
-
-        // Filters out upcoming assignments
-        for (Assignment a : allAssignments) {
-            if (!Objects.equals(a.getAssDate(), "null")) {
-                if (a.getDateFormat().isBefore(today) && !a.getHasBeenSubmited()) {
-                    overdue.add(a);
-                }
-            }
-        }
-
-        // Sorts assignments by due date, closest to today first
-        overdue.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
-
-        return overdue;
-    }
-
-    public static ArrayList<Assignment> undatedAssignments(ArrayList<Assignment> allAssignments) {
-        ArrayList<Assignment> undated = new ArrayList<>();
-        for (Assignment a : allAssignments) {
-            if (a.getDateFormat() == null) {
-                undated.add(a);
-            }
-        }
-
-        return undated;
-    }
-
-    public static ArrayList<Assignment> pastSubmitted(ArrayList<Assignment> allAssignments) {
-        ArrayList<Assignment> pastSubmitted = new ArrayList<>();
-        today = LocalDateTime.now();
-
-        // Filters out past/submitted assignments
-        for (Assignment a : allAssignments) {
-            if (!Objects.equals(a.getAssDate(), "null")) {
-                if ((a.getDateFormat().isBefore(today) || a.getDateFormat().isEqual(today)) && a.getHasBeenSubmited()) {
-                    pastSubmitted.add(a);
-                }
-            }
-        }
-
-        // Sorts assignments by due date, closest to today first
-        pastSubmitted.sort((a1, a2) -> a2.getDateFormat().compareTo(a1.getDateFormat()));
-
-        return pastSubmitted;
-    }
-
-    /**
      * Populates allAss_AL Converts an input JSONArray into an ArrayList of
      * Assignment objects
      *
@@ -203,24 +221,5 @@ public class Database {
                 System.out.println("Assignment " + i + " is missing a field");
             }
         }
-    }
-
-    /**
-     * Returns true if the given JSONObject has non-null values for all the given
-     * keys,
-     * and false otherwise.
-     *
-     * @param obj  the JSONObject to check
-     * @param keys the keys to check for non-null values
-     * @return true if the JSONObject has non-null values for all the given keys,
-     * and false otherwise.
-     */
-    private static boolean hasNonNullValues(JSONObject obj, String... keys) {
-        for (String key : keys) {
-            if (!obj.has(key) || obj.isNull(key)) {
-                return false;
-            }
-        }
-        return true;
     }
 }
