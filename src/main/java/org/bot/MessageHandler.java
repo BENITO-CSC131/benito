@@ -27,11 +27,10 @@ public class MessageHandler {
      * @throws NoSuchElementException If there is an error retrieving the course from the List
      */
     private String courseById(int assCourseId, ArrayList<Course> courses) throws NoSuchElementException {
-        for (Course course : courses) {
+        for (Course course : courses)
             if (course.getCourseID() == assCourseId) {
                 return course.getCourseName();
             }
-        }
         return "[CourseNotFound]";
     }
 
